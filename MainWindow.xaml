@@ -1,0 +1,54 @@
+﻿<Window x:Name="Clock" x:Class="Clock_WPF.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Clock_WPF"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="616.545" Width="302.812" ResizeMode="NoResize" Foreground="White" AllowsTransparency="True" WindowStyle="None" Closing="Window_Closing" Loaded="Window_Loaded" Icon="clockIcon.ico" ShowInTaskbar="False" Visibility="Visible">
+    <Window.Background>
+        <SolidColorBrush Color="White" Opacity="0"/>
+    </Window.Background>
+
+    <Window.Resources>
+        <ContextMenu x:Key="contextMenu">
+
+            <MenuItem x:Name="btnLarge_Mode" Header="Large Mode" Click="btnLarge_Click"/>
+            <MenuItem x:Name="btnNormal_Mode" Header="Normal Mode" Click="btnNormal_Click"/>
+            <MenuItem x:Name="btnSmall_Mode" Header="Small Mode" Click="btnSmall_Click" />
+
+            <Separator/>
+
+            <MenuItem x:Name="btnWhite" Header="White" Click="btnWhite_Click"/>
+            <MenuItem x:Name="btnBlack" Header="Black" Click="btnBlack_Click"/>
+
+            <Separator/>
+
+            <MenuItem x:Name="btnDividerRight" Header="Divider Right" Checked="dividerRight_Checked" Unchecked="dividerRight_Unchecked" IsCheckable="True"/>
+            <MenuItem x:Name="btnDividerLeft" Header="Divider Left" Checked="dividerLeft_Checked" Unchecked="dividerLeft_Unchecked" IsCheckable="True"/>
+
+            <Separator/>
+
+            <MenuItem x:Name="btnFruit_Reminder" Header="Fruit Reminder" Checked="FruitReminder_Checked" Unchecked="FruitReminder_Unchecked" IsCheckable="True"/>
+            <MenuItem x:Name="btnClose" Header="Close" Click="btnClose_Click"/>
+
+        </ContextMenu>
+    </Window.Resources>
+
+    <Grid x:Name="gridMain" Margin="10,10,0,-0.333">
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <Rectangle x:Name="dividerRight" Fill="White" HorizontalAlignment="Left" Height="340" Margin="280,35,0,0" Stroke="Black" VerticalAlignment="Top" Width="10" MouseLeftButtonDown="divider_MouseLeftButtonDown" MouseRightButtonUp="divider_MouseRightButtonUp" StrokeThickness="0" Visibility="Visible"/>
+        <Rectangle x:Name="dividerLeft" Fill="White" HorizontalAlignment="Left" Height="340" Margin="5,35,0,0" Stroke="Black" VerticalAlignment="Top" Width="10" MouseLeftButtonDown="divider_MouseLeftButtonDown" MouseRightButtonUp="divider_MouseRightButtonUp" StrokeThickness="0" Visibility="Visible"/>
+
+        <Label x:Name="hours" Content="00" HorizontalAlignment="Left" Margin="0,-61,0,413" VerticalAlignment="Center" FontFamily="Century Gothic" FontSize="170" Foreground="White" Height="255" Width="293" PreviewMouseLeftButtonDown="hours_PreviewMouseLeftButtonDown" MouseRightButtonUp="hours_MouseRightButtonUp" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+        <Label x:Name="minutes" Content="00" HorizontalAlignment="Left" Margin="0,94,0,258" VerticalAlignment="Center" FontFamily="Century Gothic" FontSize="170" Foreground="White" Height="255" Width="293" PreviewMouseLeftButtonDown="minutes_PreviewMouseLeftButtonDown" MouseRightButtonUp="minutes_MouseRightButtonUp" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+        <Label x:Name="day" Content="Mo, 01. September" HorizontalAlignment="Left" Height="50" Margin="5,301,0,0" FontFamily="Century Gothic" FontWeight="Bold" FontSize="25" Foreground="White" Width="285" VerticalAlignment="Top" HorizontalContentAlignment="Center" MouseLeftButtonDown="day_MouseLeftButtonDown" MouseRightButtonUp="day_MouseRightButtonUp" VerticalContentAlignment="Center" RenderTransformOrigin="0.54,0.5"/>
+
+        <Image x:Name="fruit_black" HorizontalAlignment="Left" Height="135" Margin="80,350,0,0" VerticalAlignment="Top" Width="135" Source="fruits_black_new_NEW.ico" MouseUp="fruit_black_MouseUp"/>
+        <Image x:Name="fruit_white" HorizontalAlignment="Left" Height="135" Margin="80,350,0,0" VerticalAlignment="Top" Width="135" Source="fruits_white_new_NEW.ico" MouseUp="fruit_white_MouseUp"/>
+
+    </Grid>
+</Window>

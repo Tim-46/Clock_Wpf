@@ -1,0 +1,81 @@
+# .NET-Standard-Dateien
+bin/
+obj/
+/obj/
+/bin/
+*.exe
+*.dll
+*.pdb
+*.cache
+*.zip
+*.nuget
+*.nupkg
+
+# Benutzer-spezifische Dateien
+*.user
+*.rsuser
+*.suo
+*.userosscache
+*.userprefs
+
+# Mono-Auto-Generierte-Dateien
+mono_crash.*
+
+# Windows-spezifische Dateien
+*.db
+*.DS_Store
+*.sln.docstates
+
+# Rider-spezifische Dateien
+.idea/
+*.sln.iml
+
+# VSCode-Dateien
+.vscode/
+
+# Paket-Manager
+node_modules/
+npm-debug.log
+
+# Verschiedene Dateien
+*.log
+*.bak
+*.swp
+
+# WPF-spezifische Dateien
+# Lokale Konfigurationsdateien
+appsettings.json
+appsettings.Development.json
+
+# JetBrains Rider
+.idea/
+*.sln.iml
+
+# Visual Studio Code
+.vscode/
+.history/
+.vs/
+
+# StyleCop
+stylecop.json
+.sarif
+
+# Resharper
+_ReSharper*
+resharper.xml
+resharper.*
+
+# Ignoriere Debug- und Release-Ordner
+**/Debug/
+**/Release/
+
+# Ignoriere Publish-Ordner
+**/publish/
+**/out/
+
+/Beurtelungsbogen v1.0/.vs
+/BerichtsheftMaker_WPF/.vs/BerichtsheftMaker_WPF
+/BerichtsheftMaker_WPF/.vs
+/LizenzGenerator/LizenzGenerator/bin
+/LizenzGenerator/.vs
+/BerichtsheftMaker_WPF/BerichtsheftMaker_WPF/obj
