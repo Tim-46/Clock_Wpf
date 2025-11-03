@@ -1,0 +1,51 @@
+name: Build & Publish Single EXE Release
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build_publish:
+    runs-on: windows-latest
+    env:
+      PROJECT_PATH: Clock_Wpf/Clock_Wpf.csproj
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+
+    - name: Build single-file EXE
+      run: |
+        dotnet publish $env:PROJECT_PATH -c Release -r win-x64 --self-contained true /p:PublishSingleFile=true /p:IncludeAllContentForSelfExtract=true -o ./publish
+
+    - name: Get version from project
+      id: get_version
+      run: |
+        $versionLine = Get-Content $env:PROJECT_PATH | Select-String -Pattern '<Version>(.*)</Version>'
+        if ($versionLine) {
+          $version = $versionLine.Matches[0].Groups[1].Value
+        } else {
+          $version = "v1.0.0"
+        }
+        echo "VERSION=$version" | Out-File -FilePath $Env:GITHUB_ENV -Append
+
+    - name: Create tag
+      run: |
+        git config user.name github-actions
+        git config user.email github-actions@github.com
+        git tag $env:VERSION
+        git push origin $env:VERSION
+
+    - name: Create GitHub Release and Upload EXE
+      uses: softprops/action-gh-release@v1
+      with:
+        tag_name: ${{ env.VERSION }}
+        name: ${{ env.VERSION }}
+        files: ./publish/Clock_Wpf.exe
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
