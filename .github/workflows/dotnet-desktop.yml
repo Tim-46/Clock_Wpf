@@ -1,17 +1,29 @@
-name: Build & Publish Single EXE Release
+name: Build and Release as Single Exe
 
 on:
   push:
-    branches: [ "main" ]
-
+    branches:
+      - main
+    tags:
+      - '*'
+    paths-ignore:
+      - 'README.md'
+      - '**/*.md'
+      - '.github/**'
+  workflow_dispatch:
+ 
 jobs:
-  build_publish:
+  build:
     runs-on: windows-latest
-    env:
-      PROJECT_PATH: "Clock_WPF.csproj"
+
+    permissions:
+      contents: read  
+      id-token: write 
+      packages: write  
+      issues: write 
 
     steps:
-    - name: Checkout
+    - name: Check out repository
       uses: actions/checkout@v4
 
     - name: Setup .NET
@@ -19,33 +31,68 @@ jobs:
       with:
         dotnet-version: '8.0.x'
 
-    - name: Build single-file EXE
-      run: |
-        dotnet publish $env:PROJECT_PATH -c Release -r win-x64 --self-contained true /p:PublishSingleFile=true /p:IncludeAllContentForSelfExtract=true -o ./publish
+    - name: Restore dependencies
+      run: dotnet restore ./Clock_WPF/Clock_WPF.csproj
 
-    - name: Get version from project
-      id: get_version
+    - name: Build project
+      run: dotnet build ./Clock_WPF/Clock_WPF.csproj --configuration Release --no-restore
+
+    - name: Publish single exe
       run: |
-        $versionLine = Get-Content $env:PROJECT_PATH | Select-String -Pattern '<Version>(.*)</Version>'
-        if ($versionLine) {
-          $version = $versionLine.Matches[0].Groups[1].Value
-        } else {
-          $version = "v1.0.0"
+        if (!(Test-Path -Path Clock_WPF/exe)) {
+          New-Item -ItemType Directory -Path Clock_WPF/exe
         }
-        echo "VERSION=$version" | Out-File -FilePath $Env:GITHUB_ENV -Append
+        dotnet publish ./Clock_WPF/Clock_WPF.csproj `
+          -c Release `
+          -r win-x64 `
+          --self-contained `
+          /p:PublishSingleFile=true `
+          /p:IncludeAllContentForSelfExtract=true `
+          /p:TrimUnusedDependencies=true `
+          -o Clock_WPF/exe
 
-    - name: Create tag
+    - name: List published files
       run: |
-        git config user.name github-actions
-        git config user.email github-actions@github.com
-        git tag $env:VERSION
-        git push origin $env:VERSION
+        dir Clock_WPF/exe
 
-    - name: Create GitHub Release and Upload EXE
-      uses: softprops/action-gh-release@v1
+    - name: Upload Build Artifact
+      uses: actions/upload-artifact@v4
       with:
-        tag_name: ${{ env.VERSION }}
-        name: ${{ env.VERSION }}
-        files: ./publish/Clock_Wpf.exe
+        name: Clock_WPF-Exe
+        path: Clock_WPF/exe/Clock_WPF.exe
+
+  release:
+    runs-on: ubuntu-latest
+    needs: build
+
+    permissions:
+      contents: write 
+    steps:
+    - name: Check out repository
+      uses: actions/checkout@v4
+
+    - name: Download Build Artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: Clock_WPF-Exe
+
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      with:
+        tag_name: v1.0.${{ github.run_number }}
+        release_name: Release v1.0.${{ github.run_number }}
+        draft: false
+        prerelease: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Upload Release Assets
+      uses: actions/upload-release-asset@v1
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./Clock_WPF.exe
+        asset_name: Clock_WPF.exe
+        asset_content_type: application/octet-stream
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
