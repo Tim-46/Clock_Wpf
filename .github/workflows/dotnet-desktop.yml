@@ -8,7 +8,7 @@ jobs:
   build_publish:
     runs-on: windows-latest
     env:
-      PROJECT_PATH: Clock WPF.csproj
+      PROJECT_PATH: "Clock WPF.csproj"
 
     steps:
     - name: Checkout
