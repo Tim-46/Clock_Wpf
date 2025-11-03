@@ -17,7 +17,7 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: '8.0.x'
+        dotnet-version: '6.0.x'
 
     - name: Build single-file EXE
       run: |
@@ -46,6 +46,6 @@ jobs:
       with:
         tag_name: ${{ env.VERSION }}
         name: ${{ env.VERSION }}
-        files: ./publish/Clock_Wpf.exe
+        files: ./publish/Clock WPF.exe
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
