@@ -30,34 +30,33 @@ jobs:
         dotnet-version: '8.0.x'
 
     - name: Restore dependencies
-      run: dotnet restore ./Clock_WPF/Clock_WPF.csproj
+      run: dotnet restore ./Clock_Wpf.csproj
 
     - name: Build project
-      run: dotnet build ./Clock_WPF/Clock_WPF.csproj --configuration Release --no-restore
+      run: dotnet build ./Clock_Wpf.csproj --configuration Release --no-restore
 
     - name: Publish single exe
       run: |
-        if (!(Test-Path -Path Clock_WPF/exe)) {
-          New-Item -ItemType Directory -Path Clock_WPF/exe
+        if (!(Test-Path -Path exe)) {
+          New-Item -ItemType Directory -Path exe
         }
-        dotnet publish ./Clock_WPF/Clock_WPF.csproj `
+        dotnet publish ./Clock_Wpf.csproj `
           -c Release `
           -r win-x64 `
           --self-contained `
           /p:PublishSingleFile=true `
           /p:IncludeAllContentForSelfExtract=true `
           /p:TrimUnusedDependencies=true `
-          -o Clock_WPF/exe
+          -o exe
 
     - name: List published files
-      run: |
-        dir Clock_WPF/exe
+      run: dir exe
 
     - name: Upload Build Artifact
       uses: actions/upload-artifact@v4
       with:
-        name: Clock_WPF-Exe
-        path: Clock_WPF/exe/Clock_WPF.exe
+        name: Clock_Wpf-Exe
+        path: exe/Clock_Wpf.exe
 
   release:
     runs-on: ubuntu-latest
@@ -65,6 +64,7 @@ jobs:
 
     permissions:
       contents: write 
+
     steps:
     - name: Check out repository
       uses: actions/checkout@v4
@@ -72,7 +72,7 @@ jobs:
     - name: Download Build Artifact
       uses: actions/download-artifact@v4
       with:
-        name: Clock_WPF-Exe
+        name: Clock_Wpf-Exe
 
     - name: Create Release
       id: create_release
@@ -89,8 +89,8 @@ jobs:
       uses: actions/upload-release-asset@v1
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./Clock_WPF.exe
-        asset_name: Clock_WPF.exe
+        asset_path: ./Clock_Wpf.exe
+        asset_name: Clock_Wpf.exe
         asset_content_type: application/octet-stream
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
